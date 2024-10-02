@@ -1,17 +1,25 @@
 const socket = io();
 
-const reloadUsers = (data) => {
-  data.forEach(player => {
-    const hello = document.createElement('div');
-    hello.innerText = `id: ${player.id}, count: ${player.count}`;
-    document.body.appendChild(hello);
-  });
-}
+const WIDHT = 500;
+const HEIGHT = 500;
+
+const canvas = document.getElementById('arena');
+      canvas.width = WIDHT;
+      canvas.height = HEIGHT;
+const context = canvas.getContext('2d');
 
 socket.emit('new_player');
 
-socket.on('state', (data) => {
-  reloadUsers(data)
+socket.on('state', (players) => {
+  context.beginPath();
+  context.fillStyle = 'gray';
+  context.fillRect(0, 0, WIDHT, HEIGHT);
+  context.closePath();
+
+  for (const id in players) {
+    const player = players[id];
+    spawnPlayer(context, player);
+  }
 });
 
 socket.on('new', (data) => {

@@ -3,6 +3,8 @@ const http = require("http");
 const path = require("path");
 const socketIo = require("socket.io");
 
+const getPlayers = require("./player").getPlayers;
+
 const app = express();
 const server = http.Server(app);
 const io = socketIo(server);
@@ -24,17 +26,15 @@ server.listen(5000, () => {
 // Game
 // *********************
 
-const players = [];
+let players = [];
 let count = 1;
 
 io.on('connection', (socket) => {
   socket.emit('new', socket.id);
 
+  players = getPlayers(socket);
+
   socket.on('new_player', (data) => {
-    players.push({
-      id: socket.id,
-      count: count,
-    });
 
     count++;
     socket.emit('state', players);
@@ -45,8 +45,17 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    players.pop();
     socket.emit('state', players);
     count--;
   });
 });
+
+const gameLoop = (players, io) => {
+  io.sockets.emit('state', players);
+};
+
+setInterval(() => {
+  if (players && io) {
+    gameLoop(players, io);
+  }
+}, 1000 / 60)
