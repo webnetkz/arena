@@ -4,10 +4,13 @@ class Player {
   constructor (props) {
     this._name = props.name;
     this._id = props.id;
-    this._playerRadius = 30;
+    this._playerRadius = 10;
+    this._moveSpeed = 2;
+    this._rotateSpeed = 2;
 
     this.positionX = 100;
     this.positionY = 100;
+    this.rayCast = 180;
   }
 }
 
@@ -21,21 +24,31 @@ module.exports.getPlayers = (socket) => {
 
   socket.on('move', (movement) => {
     const player = players[socket.id] || {};
-    
-    if (movement.left) {
-      player.positionX -= 5;
+
+    console.log(player);
+
+    if (movement.left && player.positionX >= 30) {
+      player.positionX -= player._moveSpeed;
     }
 
-    if (movement.up) {
-      player.positionY -= 5;
+    if (movement.up && player.positionY >= 30) {
+      player.positionY -= player._moveSpeed;
     }
 
     if (movement.right) {
-      player.positionX += 5;
+      player.positionX += player._moveSpeed;
     }
 
     if (movement.down) {
-      player.positionY += 5;
+      player.positionY += player._moveSpeed;
+    }
+
+    if (movement.rotateLeft) {
+      player.rayCast += player._rotateSpeed;
+    }
+
+    if (movement.rotateRight) {
+      player.rayCast -= player._rotateSpeed;
     }
   })
 

@@ -3,10 +3,13 @@ const movement = {
   down: false,
   left: false,
   right: false,
+  rotateLeft: false,
+  rotateRight: false,
 }
 
 
 document.addEventListener('keydown', (event) => {
+  console.log(event.keyCode);
   switch (event.keyCode) {
     case 65:
       movement.left = true;
@@ -19,6 +22,12 @@ document.addEventListener('keydown', (event) => {
       break;
     case 83:
       movement.down = true;
+      break;
+    case 37:
+      movement.rotateLeft = true;
+      break;
+    case 39:
+      movement.rotateRight = true;
       break;
   }
 });
@@ -36,6 +45,12 @@ document.addEventListener('keyup', (event) => {
       break;
     case 83:
       movement.down = false;
+      break;
+    case 37:
+      movement.rotateLeft = false;
+      break;
+    case 39:
+      movement.rotateRight = false;
       break;
   }
 });

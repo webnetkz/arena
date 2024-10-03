@@ -1,7 +1,7 @@
 const socket = io();
 
-const WIDHT = 500;
-const HEIGHT = 500;
+const WIDHT = window.innerWidth;
+const HEIGHT = window.innerHeight;
 
 const canvas = document.getElementById('arena');
       canvas.width = WIDHT;
